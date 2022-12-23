@@ -9,31 +9,24 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import pathlib
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
-
-# BASE_DIR = Path(__file__).resolve().parent.parent
-#
-# env = environ.Env(DEBUG=(bool, False), SECRET_KEY=(str, "spifq9otuo"))
 # # Quick-start development settings - unsuitable for production
 # # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 #
 # # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = env('SECRET_KEY')
-# # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = env('DEBUG')
-import os
-import environ
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+environ.Env.read_env(pathlib.PurePath(BASE_DIR).joinpath('.env'))
 
 SECRET_KEY = env('SECRET_KEY')
-DEBUG = env('DEBUG')
+DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ["*"]
 
@@ -86,17 +79,16 @@ WSGI_APPLICATION = "todolist.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': os.environ.get("DB_ENGINE"),
-        'NAME': os.environ.get("DB_NAME"),
-        'USER': os.environ.get("DB_USER"),
-        'PASSWORD': os.environ.get("DB_PASSWORD"),
-        'HOST': os.environ.get("DB_HOST"),
-        'PORT': os.environ.get("DB_PORT"),
+        'ENGINE': env('DB_ENGINE'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
     }
         }
 
 
-# DATABASES = {"default": env("DATABASE_URL")}
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
